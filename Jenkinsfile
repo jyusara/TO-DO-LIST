@@ -1,23 +1,50 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'todo-list-app'
+        CONTAINER_NAME = 'todo-list-container'
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/jyusara/TO-DO-LIST.git'
             }
         }
-        
+
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t todo-list-app .'
+                script {
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                }
             }
         }
 
         stage('Run Container') {
             steps {
-                sh 'docker run -d -p 8080:80 --name todo-list-container todo-list-app'
+                script {
+                    // Si el contenedor ya existe, lo elimina antes de crear uno nuevo
+                    sh "docker rm -f ${CONTAINER_NAME} || true"
+                    sh "docker run -d -p 8080:80 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
+                }
             }
         }
     }
+
+    post {
+        always {
+            // Elimina el contenedor al finalizar
+            sh "docker rm -f ${CONTAINER_NAME} || true"
+        }
+    }
+
+        stage('Test Docker Access') {
+        steps {
+            script {
+                sh 'docker --version'
+            }
+        }
+    }
+
 }

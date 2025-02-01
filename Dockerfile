@@ -1,10 +1,10 @@
-# Usa una imagen base de Nginx para servir archivos estáticos
+# Usa la imagen base de Nginx
 FROM nginx:1.21.6
 
-# Copia los archivos HTML, CSS y JS al contenedor dentro del directorio de Nginx
-COPY TO-DO-LIST /usr/share/nginx/html/
+# Copia todos los archivos del proyecto a la carpeta de Nginx
+COPY . /usr/share/nginx/html/
 
-# Expone el puerto 80 para acceder a la aplicación
+# Expone el puerto 80 para servir la aplicación
 EXPOSE 80
 
 # Comando por defecto para ejecutar Nginx
