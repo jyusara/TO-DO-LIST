@@ -30,6 +30,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Test Docker Access') {
+        steps {
+            script {
+                sh 'docker --version'
+            }
+        }
+    }
     }
 
     post {
@@ -39,12 +47,6 @@ pipeline {
         }
     }
 
-        stage('Test Docker Access') {
-        steps {
-            script {
-                sh 'docker --version'
-            }
-        }
-    }
+        
 
 }
